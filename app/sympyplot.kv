@@ -1,0 +1,146 @@
+
+<Container>:
+    orientation: 'lr-tb'
+    textdxdt: dxdt
+    textdydt: dydt
+    texta: a
+    textb: b
+    report: result
+    scroll: scrollviewer
+    leftborderx: leftborderx
+    rightborderx: rightborderx
+    leftbordery: leftbordery
+    rightbordery: rightbordery
+    vec_len: vec_len
+    vec_width: vec_width
+
+    count: count
+    ScrollView:
+        
+        size_hint:(1,1)
+        size:(400, 5)
+        do_scroll_y:True
+        do_scroll_x:True
+        BoxLayout:
+            id: scrollviewer
+            size_hint: 1, None
+            size: 1, 2000
+            orientation: 'vertical'
+            BoxLayout:
+                size_hint: 1, None
+                size: 300, 50
+                Label:
+                    text: 'x`'
+                    size_hint: 0.2, 1
+                TextInput:
+                    id: dxdt
+                    multiline: False
+                    text: '(-1) *x*(b-x-y)'
+
+            BoxLayout:
+                size_hint: 1, None
+                size: 300, 50
+                Label:
+                    text: 'y`'
+                    size_hint: 0.2, 1
+                TextInput:
+                    id: dydt
+                    multiline: False
+                    text: '(a-y)*(2*x+y)'
+
+            BoxLayout:
+                size_hint: 1, None
+                size: 300, 50
+                Label:
+                    text: 'a'
+                    size_hint: 0.2, 1
+                TextInput:
+                    id: a
+                    multiline: False
+                    text: '2'
+
+            BoxLayout:
+                size_hint: 1, None
+                size: 300, 50
+                Label:
+                    text: 'b'
+                    size_hint: 0.2, 1
+                TextInput:
+                    id: b
+                    multiline: False
+                    text: '2'
+            BoxLayout:
+                size_hint: 1, None
+                size: 300, 50
+                Label:
+                    text: 'left x'
+                    size_hint: 0.2, 1
+                TextInput:
+                    id: leftborderx
+                    multiline: False
+                    text: '-10' 
+                Label:
+                    text: 'right x'
+                    size_hint: 0.2, 1
+                TextInput:
+                    id: rightborderx
+                    multiline: False
+                    text: '10'
+                Label:
+                    text: 'left y'
+                    size_hint: 0.2, 1
+                TextInput:
+                    id: leftbordery
+                    multiline: False
+                    text: '-10' 
+                Label:
+                    text: 'right y'
+                    size_hint: 0.2, 1
+                TextInput:
+                    id: rightbordery
+                    multiline: False
+                    text: '10'
+                Label:
+                    text: 'count'
+                    size_hint: 0.2, 1
+                TextInput:
+                    id: count
+                    multiline: False
+                    text: '800'
+            BoxLayout:
+                size_hint: 1, None
+                size: 300, 50
+                Label:
+                    text: 'vector len'
+                    size_hint: 0.2, 1
+                TextInput:
+                    id: vec_len
+                    multiline: False
+                    text: '0.3'
+                Label:
+                    text: 'vector width'
+                    size_hint: 0.2, 1
+                TextInput:
+                    id: vec_width
+                    multiline: False
+                    text: '0.125'
+                  
+                
+            Button:
+                text: 'Анализ'
+                size_hint: 1, None
+                size: 300, 100
+                on_press: root.analiz()
+            
+            ScrollView:
+                size_hint: (1,None) 
+                size: (400, 200)
+                do_scroll_y: True
+                do_scroll_x: False
+                Label:
+                    id: result
+                    text: "Отчёт"
+                    size_hint_y: None
+                    size: (100, 2000)
+    
+    

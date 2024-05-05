@@ -1,0 +1,4 @@
+\babel@toc {russian}{}\relax 
+\contentsline {section}{\numberline {1}Анализ состояний равновесия системы}{3}{}%
+\contentsline {subsection}{\numberline {1.1}Общая бифуркационная диаграмма для всех состояний равновесия}{5}{}%
+\contentsline {section}{\numberline {2}Фазовые портреты системы}{6}{}%
