@@ -6,10 +6,10 @@ from kivy.core import text
 from sympy.core import N    
 from sympy import symbols, sin, S, Eq, Interval, Union
 from sympy.calculus.util import continuous_domain
-from spb import line, plot, MB
+#from spb import line, plot, MB
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
-from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg as FCKA
+from kivy_garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg as FCKA
 import sympy as sp
 import numpy as np
 import matplotlib.pyplot as plt

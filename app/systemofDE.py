@@ -1,7 +1,7 @@
 import sympy
-from latex2sympy2 import latex2sympy, latex2latex
+#from latex2sympy2 import latex2sympy, latex2latex
 from sympy.plotting import plot
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import threading
 from randcolor import RandColor
 
