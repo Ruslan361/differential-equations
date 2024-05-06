@@ -200,7 +200,7 @@ class Container(StackLayout):
             for first in nulklines[key]:
                 for first_f in first:
                     lines.append((first_f, first[first_f]))
-        self.report.text = result
+        
         
         left_border_x = float(self.leftborderx.text)
         right_border_x = float(self.rightborderx.text)
@@ -231,6 +231,9 @@ class Container(StackLayout):
         for xs in xoty:
             plot_xy(xs, (left_border_y, right_border_y), str(xs))
         self.GraphRefresh()
+
+        result += " инвариантные прямые \n" + str(self.system.SearchInvariantLines(a, b))
+        self.report.text = result
         #p = self.system.Plot(nulklines["P = 0"])
         #p.extend(self.system.Plot(nulklines["Q = 0"]))
 

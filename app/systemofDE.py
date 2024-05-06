@@ -118,6 +118,7 @@ class SystemOfDifferentialEquationsOnPlane:
         eigenvalues = list()
         #Matrix = sympy.Matrix([[1, 0], [0,1]])
         current = Matrix.eigenvects()
+        print(current)
         for elem in current:
             for i in range(elem[1]):
                 eigenvalues.append(elem[0])
@@ -132,7 +133,7 @@ class SystemOfDifferentialEquationsOnPlane:
         Qy = sympy.diff(self.Q, self.y).subs({self.x: x0, self.y: y0, self.a: a, self.b: b})
         
         dxdt = Px * (self.x - x0) + Py * (self.y - y0)
-        dydt = Qy * (self.x - x0) + Qy * (self.y - y0)
+        dydt = Qx * (self.x - x0) + Qy * (self.y - y0)
         return dxdt, dydt
         
     def GetLinearizationEigenVectors(self, x0, y0, a, b):

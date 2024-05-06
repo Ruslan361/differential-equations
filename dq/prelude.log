@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024/Arch Linux) (preloaded format=pdflatex 2024.4.17)  18 APR 2024 14:19
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024/Arch Linux) (preloaded format=pdflatex 2024.4.17)  7 MAY 2024 01:04
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/home/ruslan/Desktop/git/dq/prelude.tex
-(/home/ruslan/Desktop/git/dq/prelude.tex
+**/home/ruslan/Desktop/git/differential-equations/dq/prelude.tex
+(/home/ruslan/Desktop/git/differential-equations/dq/prelude.tex
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
 (/usr/share/texmf-dist/tex/latex/base/article.cls
@@ -378,17 +378,17 @@ File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
 \Gin@req@width=\dimen165
 ))
 ! Emergency stop.
-<*> /home/ruslan/Desktop/git/dq/prelude.tex
-                                           
+<*> ...p/git/differential-equations/dq/prelude.tex
+                                                  
 *** (job aborted, no legal \end found)
 
  
 Here is how much of TeX's memory you used:
  4495 strings out of 474116
- 62629 string characters out of 5750249
+ 62698 string characters out of 5750249
  1925187 words of memory out of 5000000
  26850 multiletter control sequences out of 15000+600000
  559169 words of font info for 38 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,0n,65p,251b,104s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 57i,0n,65p,274b,104s stack positions out of 10000i,1000n,20000p,200000b,200000s
 !  ==> Fatal error occurred, no output PDF file produced!

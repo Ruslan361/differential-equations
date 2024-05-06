@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1713439145.51687 "/home/ruslan/Desktop/git/dq/prelude.tex" "prelude.pdf" "prelude" 1713439145.82465 2
+["pdflatex"] 1715033072.18652 "/home/ruslan/Desktop/git/differential-equations/dq/prelude.tex" "prelude.pdf" "prelude" 1715033072.49395 2
   "/home/ruslan/.texlive/texmf-var/fonts/tfm/lh/lh-t2a/larm1200.tfm" 1713310762.64346 3240 c2435f2b5cd66d4930bc29b8df87967e ""
-  "/home/ruslan/Desktop/git/dq/prelude.tex" 1712944608 789 9d08dea62fbfcddc8c00514f4d4a0d35 ""
+  "/home/ruslan/Desktop/git/differential-equations/dq/prelude.tex" 1712944608 789 9d08dea62fbfcddc8c00514f4d4a0d35 ""
   "/usr/share/texmf-dist/fonts/map/fontname/texfonts.map" 1713199481 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf-dist/fonts/tfm/public/cm/cmr12.tfm" 1713199481 1288 655e228510b4c2a1abe905c368440826 ""
   "/usr/share/texmf-dist/tex/generic/babel-russian/russianb.ldf" 1713199481 27193 cd3440b122aaa8e30416378ef38b3173 ""
@@ -36,7 +36,7 @@
   "/usr/share/texmf-dist/tex/latex/tools/indentfirst.sty" 1713199481 1618 c5f08dcf49a56107311a81073b35fa4e ""
   "/usr/share/texmf-dist/web2c/texmf.cnf" 1713199481 41588 b43d3e860a4f94167ee1e725ff526a72 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1713311937 8555702 68b4257ce30377a51eb20f47b9ac5548 ""
-  "prelude.aux" 1713439145.51337 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "prelude.aux" 1715033072.18438 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
   "prelude.tex" 1712944608 789 9d08dea62fbfcddc8c00514f4d4a0d35 ""
   (generated)
   "prelude.aux"

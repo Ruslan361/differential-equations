@@ -1,7 +1,7 @@
-PWD /home/ruslan/Desktop/git/dq
+PWD /home/ruslan/Desktop/git/differential-equations/dq
 INPUT /usr/share/texmf-dist/web2c/texmf.cnf
 INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
-INPUT /home/ruslan/Desktop/git/dq/prelude.tex
+INPUT /home/ruslan/Desktop/git/differential-equations/dq/prelude.tex
 OUTPUT prelude.log
 INPUT /usr/share/texmf-dist/tex/latex/base/article.cls
 INPUT /usr/share/texmf-dist/tex/latex/base/article.cls
