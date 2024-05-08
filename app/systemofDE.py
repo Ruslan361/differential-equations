@@ -5,6 +5,69 @@ from sympy.plotting import plot
 import threading
 from randcolor import RandColor
 
+def GetEigenVectorAndValues (Matrix) -> tuple:
+  eigenvectors = list()
+  eigenvalues = list()
+  #Matrix = sympy.Matrix([[1, 0], [0,1]])
+  current = Matrix.eigenvects()
+  print(current)
+  for elem in current:
+      for i in range(elem[1]):
+          eigenvalues.append(elem[0])
+      for e in elem[2]:
+          eigenvectors.append(e)
+
+  return eigenvalues, eigenvectors
+
+def GetTypeOfEq(eigenvalues):
+  if len(eigenvalues) == 2:
+    Re_0 = sympy.re(eigenvalues[0])
+    Im_0 = sympy.im(eigenvalues[0])
+    Re_1 = sympy.re(eigenvalues[1])
+    Im_1 = sympy.im(eigenvalues[1])
+    if Re_0 == 0 or Re_1 == 0:
+        #Проверка на сложный фокус или центр
+        if Im_1 == Im_0 and (not Im_1 == 0):
+          return "сложный фокус или центр"
+        #Проверка на касп
+        elif Im_1 == Im_0 and Im_1 == 0 and Re_0 == 0 and Re_1 == 0:
+          return "касп"
+        elif Im_1 == 0 or Im_0 == 0:
+          return "седлоузел"
+        else:
+          return "негрубое состояние равновесия"
+    else:
+        #Проверка на вещественность числа
+        if Im_0 == 0 and Im_1 == 0:
+            #проверка на седло
+            if Re_0 > 0 and Re_1 < 0 or Re_0 < 0 and Re_1 > 0:
+              return "седло"
+            #elif Re_0 != Re_1:
+            elif Re_0 > 0 and Re_1 > 0:
+              return "неустойчивый узел"
+            else:
+              return "устойчивый узел"
+        #else:
+                # result.append({"Состояние равновесия": state, "собственные числа": eigenvalues, "тип состояния равновесия": "Нужны дополнительные исследования"})
+        else:
+            #Число комплексное
+            if Re_0 > 0 and Re_1 > 0:
+              return "неустойчивый фокус"
+            elif Re_0 < 0 and Re_1 < 0:
+              return "устойчивый фокус"
+            else:
+              return "нужны дополнительные исследования"
+
+def GetChar(state, J):
+  x, y, a, b = sympy.symbols('x y a b')
+  JatState = J.subs({x: state[x], y: state[y]})
+  #print()
+  #print(state)
+  #print(JatState)
+  #print()
+  eigenvalues, eigenvectors = GetEigenVectorAndValues(JatState)
+  return {"Состояние равновесия": state, "собственные числа": eigenvalues,"собственные вектора": eigenvectors, "тип состояния равновесия": GetTypeOfEq(eigenvalues)}
+
 #Поиск коэффициэнтов методом неопределённых коэффициэнтов
 def GetKoeff(exp, variable, k, c) -> tuple:
     #expr = expr.subs({variable, sympy.symbols('x')})
@@ -93,7 +156,7 @@ class SystemOfDifferentialEquationsOnPlane:
                         #functions.remove(func)
                         functions.extend(yotx)
                         continue
-                              
+
                 p = sympy.plot_implicit(eq, (self.x, -100, 100), (self.y, -100, 100), points=100000000, show=False, block=False)
                 p1.extend(p)
             else:
@@ -112,7 +175,7 @@ class SystemOfDifferentialEquationsOnPlane:
         #P = sympy.simplify(P)
         #Q = sympy.simplify(Q)
         return {"P": P, "Q": Q}
-    
+
     def GetEigenVectorAndValues (self, Matrix) -> tuple:
         eigenvectors = list()
         eigenvalues = list()
@@ -124,18 +187,18 @@ class SystemOfDifferentialEquationsOnPlane:
                 eigenvalues.append(elem[0])
             for e in elem[2]:
                 eigenvectors.append(e)
-                
+
         return eigenvalues, eigenvectors
     def Linearization(self, x0, y0, a, b):
         Px = sympy.diff(self.P, self.x).subs({self.x: x0, self.y: y0, self.a: a, self.b: b})
         Py = sympy.diff(self.P, self.y).subs({self.x: x0, self.y: y0, self.a: a, self.b: b})
         Qx = sympy.diff(self.Q, self.x).subs({self.x: x0, self.y: y0, self.a: a, self.b: b})
         Qy = sympy.diff(self.Q, self.y).subs({self.x: x0, self.y: y0, self.a: a, self.b: b})
-        
+
         dxdt = Px * (self.x - x0) + Py * (self.y - y0)
         dydt = Qx * (self.x - x0) + Qy * (self.y - y0)
         return dxdt, dydt
-        
+
     def GetLinearizationEigenVectors(self, x0, y0, a, b):
         dxdt, dydt = self.Linearization(x0, y0, a, b)
         Px = sympy.diff(dxdt, self.x)
@@ -144,58 +207,14 @@ class SystemOfDifferentialEquationsOnPlane:
         Qy = sympy.diff(dydt, self.y)
         J = sympy.Matrix([[Px,Py], [Qx, Qy]])
         return list(zip(dxdt, dydt, self.GetEigenVectorAndValues(J)))
-        
+
     def GetCharacteristicOfStateOfEquilibriumAB(self, SofE:list, a:float, b:float) -> list:
         J = self.GetJacobian()
         J = J.subs({self.a: a, self.b: b})
 
         result = list()
         for state in SofE:
-            JatState = J.subs({self.x: state[self.x], self.y: state[self.y]})
-            #print()
-            #print(state)
-            #print(JatState)
-            #print()
-            eigenvalues, eigenvectors = self.GetEigenVectorAndValues(JatState)
-
-            
-            if len(eigenvalues) == 2:
-                Re_0 = sympy.re(eigenvalues[0])
-                Im_0 = sympy.im(eigenvalues[0])
-                Re_1 = sympy.re(eigenvalues[1])
-                Im_1 = sympy.im(eigenvalues[1])
-                if Re_0 == 0 or Re_1 == 0:
-                    #Проверка на сложный фокус или центр
-                    if Im_1 == Im_0 and (not Im_1 == 0):
-                        result.append({"Состояние равновесия": state, "собственные числа": eigenvalues, "собственные вектора": eigenvectors, "тип состояния равновесия": "сложный фокус или центр"})
-                    #Проверка на касп
-                    elif Im_1 == Im_0 and Im_1 == 0:
-                        result.append({"Состояние равновесия": state, "собственные числа": eigenvalues,"собственные вектора": eigenvectors, "тип состояния равновесия": "Касп"})
-                    elif Im_1 == 0 or Im_0 == 0:
-                        result.append({"Состояние равновесия": state, "собственные числа": eigenvalues,"собственные вектора": eigenvectors, "тип состояния равновесия": "Седлоузел"})
-                    else:
-                        result.append({"Состояние равновесия": state, "собственные числа": eigenvalues,"собственные вектора": eigenvectors, "тип состояния равновесия": "Негрубое состояние равновесия"})
-                else:
-                    #Проверка на вещественность числа
-                    if Im_0 == 0 and Im_1 == 0:
-                        #проверка на седло
-                        if Re_0 > 0 and Re_1 < 0 or Re_0 < 0 and Re_1 > 0:
-                            result.append({"Состояние равновесия": state, "собственные числа": eigenvalues,"собственные вектора": eigenvectors, "тип состояния равновесия": "Седло"})
-                        #elif Re_0 != Re_1:
-                        elif Re_0 > 0 and Re_1 > 0:
-                            result.append({"Состояние равновесия": state, "собственные числа": eigenvalues,"собственные вектора": eigenvectors, "тип состояния равновесия": "Неустойчивый узел"})
-                        else:
-                            result.append({"Состояние равновесия": state, "собственные числа": eigenvalues,"собственные вектора": eigenvectors, "тип состояния равновесия": "Устойчивый узел"})
-                    #else:
-                           # result.append({"Состояние равновесия": state, "собственные числа": eigenvalues, "тип состояния равновесия": "Нужны дополнительные исследования"})
-                    else:
-                        #Число комплексное
-                        if Re_0 > 0 and Re_1 > 0:
-                            result.append({"Состояние равновесия": state, "собственные числа": eigenvalues,"собственные вектора": eigenvectors, "тип состояния равновесия": "Неустойчивый фокус"})
-                        elif Re_0 < 0 and Re_1 < 0:
-                            result.append({"Состояние равновесия": state, "собственные числа": eigenvalues,"собственные вектора": eigenvectors, "тип состояния равновесия": "Устойчивый фокус"}) 
-                        else:
-                            result.append({"Состояние равновесия": state, "собственные числа": eigenvalues,"собственные вектора": eigenvectors, "тип состояния равновесия": "Нужны дополнительные исследования"}) 
+          result.append(GetChar(state, J))
         return result
     def SearchInvariantLines(self, a, b):
         #y = kx + c
@@ -204,32 +223,30 @@ class SystemOfDifferentialEquationsOnPlane:
         Y = k * self.x + c
         P = self.P.subs({self.a: a, self.b: b})
         Q = self.Q.subs({self.a: a, self.b: b})
-        
+
         #dy/dt - k * dx/dt
         exp = Q.subs({self.y: Y}) - k * P.subs({self.y: Y})
-        
+
         koeffs = GetKoeff(exp, self.x, k, c)
-        
+
         #yotx - инвариантные прямые
         yotx = []
         for coeff in koeffs:
             yotx.append((coeff[0] * self.x + coeff[1]))
-        
-        
-        
-        
+
+
+
+
         #x = ky + c
         #dx/dt - k * dy/dt
         X = k * self.y + c
         exp = P.subs({self.x: X}) - k * Q.subs({self.x: X})
-        
+
         koeffs = GetKoeff(exp, self.y, k, c)
-        
+
         #yotx - инвариантные прямые
         xoty = []
         for coeff in koeffs:
             xoty.append((coeff[0] * self.x + coeff[1]))
         #print(koeffs)
         return yotx, xoty
-
-    

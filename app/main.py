@@ -3,7 +3,7 @@ import systemofDE
 from kivy.uix.stacklayout import StackLayout
 from sympy.parsing.sympy_parser import parse_expr
 from kivy.core import text
-from sympy.core import N    
+from sympy.core import N
 from sympy import symbols, sin, S, Eq, Interval, Union
 from sympy.calculus.util import continuous_domain
 #from spb import line, plot, MB
@@ -39,7 +39,7 @@ def plot_yx(expr, x_range=(-10, 10), label=""):
         y_vals = np.full(800, y_vals)
     #plt.figure(figsize=(10, 6))
     plt.plot(x_vals, y_vals, '--b', label=label)
-    
+
 
 
 def plot_xy(expr, y_range=(-10, 10), label=""):
@@ -65,10 +65,10 @@ def plot_xy(expr, y_range=(-10, 10), label=""):
     #plt.figure(figsize=(10, 6))
     plt.plot(x_vals, y_vals, '--b', label=label)
 
-    
-    
 
-    
+
+
+
 def DrawSystem(system, startx: float, starty:float, steps:int, sizeofstep: float, a = 1, b = 1):
     x, y = startx, starty
     xpoints = []
@@ -88,15 +88,15 @@ def arrowbuild(x: float, y: float, dx: float, dy: float, vector_len:float, vecto
     if not (l == 0):
         dx = dx/l
         dy=dy/l
-    
-    
+
+
 
     dx = dx * vector_len
     dy = dy * vector_len
     #arrowprops=arrowprops(arrowstyle='<-', color='blue', linewidth=10, mutation_scale=150)
     plt.arrow(x=x, y=y, dx=dx, dy=dy, shape='full', width= vector_width)
 
-    
+
 def build(graphics, left_border_x, right_border_x, left_border_y, right_border_y, count):
     # Определяем уравнение
     x = sp.symbols('x')
@@ -104,7 +104,7 @@ def build(graphics, left_border_x, right_border_x, left_border_y, right_border_y
     plt.clf()
     for left, right in graphics:
 
-    
+
 
 
 
@@ -116,7 +116,7 @@ def build(graphics, left_border_x, right_border_x, left_border_y, right_border_y
 
         Xm, Ym = np.meshgrid(x_values, y_values)
         label_g = f"{str(left)} = {str(right)}"
-        
+
         #plt.figure()
         color = RandColor()
         plt.contour(Xm, Ym, Z(Xm, Ym), [0], colors=color, show=False, label=label_g)
@@ -125,22 +125,22 @@ def build(graphics, left_border_x, right_border_x, left_border_y, right_border_y
         plt.legend()
         plt.xlim(left_border_x, right_border_x)
         plt.ylim(left_border_y, right_border_y)
-        
-        
-        
-    
+
+
+
+
     plt.grid(True)
     #plt.show()
         #plt.show()
 
-        
+
         # Convert the Sympy plot to a Kivy compatible format
         #fig = sympy_plot._fig
     plt.legend()
     #graph = FCKA(figure=plt.gcf())
     #return graph
 
-    
+
 class Container(StackLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -148,24 +148,24 @@ class Container(StackLayout):
         y = sp.symbols('y')
         left = x**2 + y**2
         right = 1
-        
+
         build([(left, right)], -2, 2, -2, 2, 400 )
         self.graph = FCKA(figure=plt.gcf())
         self.graph.size = (500, 500)
         self.graph.size_hint = (None, None)
         self.scroll.add_widget(self.graph)
     def GraphRefresh(self):
-        
+
         self.scroll.remove_widget(self.graph)
         self.graph = FCKA(figure=plt.gcf())
         self.scroll.add_widget(self.graph)
         self.graph.mpl_connect("button_press_event", self.on_graph_click)
         self.graph.size = (1000, 1000)
         self.graph.size_hint = (None, None)
-                 
+
     def analiz(self):
         result = ""
-        
+
         x = sp.symbols('x')
         y = sp.symbols('y')
         a = int(self.texta.text)
@@ -176,38 +176,38 @@ class Container(StackLayout):
         self.system = systemofDE.SystemOfDifferentialEquationsOnPlane(P, Q)
 
 
-        
+
         result += "Поиск состояний равновесия и их анализ \n"
         SofE = self.system.GetStateOfEquilibriumAB(a, b)
         characteristics = self.system.GetCharacteristicOfStateOfEquilibriumAB(SofE, a, b)
-        
-        
-        
+
+
+
         for char in characteristics:
             for key in char:
                 result += str(key) + ':' + str(char[key]) + '\n\n\n'
 
-                
-            
+
+
         result += ("Поиск уравнений нульклин \n")
         nulklines = self.system.GetNulklines(a, b)
 
         result += str(nulklines) + '\n'
         result += ("Изображение нульклин") +'\n'
-        
+
         lines = []
         for key in nulklines:
             for first in nulklines[key]:
                 for first_f in first:
                     lines.append((first_f, first[first_f]))
-        
-        
+
+
         left_border_x = float(self.leftborderx.text)
         right_border_x = float(self.rightborderx.text)
         left_border_y = float(self.leftbordery.text)
         right_border_y = float(self.rightbordery.text)
         count = int(self.count.text)
-        
+
         build(lines, left_border_x, right_border_x, left_border_y, right_border_y , 800)
         for char in characteristics:
             state = char["Состояние равновесия"]
@@ -219,20 +219,25 @@ class Container(StackLayout):
                     dx = float (vec[0].evalf())
                     dy = float (vec[1].evalf())
                     arrowbuild(float(state[x].evalf()), float(state[y].evalf()), dx, dy, vector_len, vector_width)
-                
-        
+
+
         print(self.system.SearchInvariantLines(a, b))
-        
-        
-        
+
+
+
         yotx, xoty = self.system.SearchInvariantLines(a, b)
         for ys in yotx:
             plot_yx(ys, (left_border_x, right_border_x), str(ys))
         for xs in xoty:
             plot_xy(xs, (left_border_y, right_border_y), str(xs))
         self.GraphRefresh()
+        lines  = self.system.SearchInvariantLines(a, b)
+        result += " инвариантные прямые \n"
+        for line  in lines[0]:
+          result+= "y = " + str(line) + '\n'
+        for line in lines[1]:
+          result += "x = " + str(line) + '\n'
 
-        result += " инвариантные прямые \n" + str(self.system.SearchInvariantLines(a, b))
         self.report.text = result
         #p = self.system.Plot(nulklines["P = 0"])
         #p.extend(self.system.Plot(nulklines["Q = 0"]))
@@ -254,19 +259,19 @@ class Container(StackLayout):
 
                 vector_len = float(self.vec_len.text)
                 vector_width = float(self.vec_width.text)
-                
+
                 arrowbuild(x, y, dx, dy, vector_len, vector_width)
                 self.GraphRefresh()
-                
+
                 #print(f"Clicked on point: x = {x}, y = {y}")
-                
+
 
 class SympyPlotApp(App):
     def build(self):
         container = Container()
         return container
 
-    
+
 if __name__ == "__main__":
     SympyPlotApp().run()
 
@@ -291,7 +296,7 @@ if __name__ == "__main__":
 """
 """
     print(type(P))
-    #состояния равновесия 
+    #состояния равновесия
     eq1 = sympy.Eq(P, 0)
     print(eq1)
 
