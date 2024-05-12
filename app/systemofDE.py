@@ -247,6 +247,6 @@ class SystemOfDifferentialEquationsOnPlane:
         #yotx - инвариантные прямые
         xoty = []
         for coeff in koeffs:
-            xoty.append((coeff[0] * self.x + coeff[1]))
+            xoty.append((coeff[0] * self.y + coeff[1]))
         #print(koeffs)
         return yotx, xoty

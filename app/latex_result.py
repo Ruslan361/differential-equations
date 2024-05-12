@@ -77,13 +77,14 @@ class LatexGenerator:
     else:
       for i, l in enumerate(lambdasvalues):
         result += '${\\lambda_{'+ str(i+1) +'}}' + ' = ' + sympy.latex(l)
-        if l < 0:
-          result += '  < 0 '
-        if l > 0:
-          result += ' > 0 '
-        if l == 0:
-          result += ' = 0 '
-        result += '$'
+        if sympy.im(l) == 0:
+          if l < 0:
+            result += '  < 0 '
+          if l > 0:
+            result += ' > 0 '
+          if l == 0:
+            result += ' = 0 '
+          result += '$'
         if i == 0:
           result += ' и '
 
@@ -100,7 +101,7 @@ class LatexGenerator:
     Q = self.system.Q.subs({a: an, b:bn})
     Ps = str(P).replace('*', ' \\cdot ')
     Qs = str(Q).replace('*', ' \\cdot ')
-    latex = f"Возьмем следующие значения параметров:  $a^\\ast = {an},\; b^\\ast = {bn}$. При этих параметрах система будет иметь следующий вид: \n\n"
+    latex = f"Возьмем следующие значения параметров:  $a^\\ast = {an}$, $b^\\ast = {bn}$. При этих параметрах система будет иметь следующий вид: \n\n"
     latex += "$$\n\
 \\left \lbrace \n\
 \\begin{matrix} \n"
@@ -141,7 +142,7 @@ if __name__ == '__main__':
   P = (-1) *x*(b-x-y)
   Q = (a-y)*(2*x+y)
   generator = LatexGenerator(P, Q)
-  latex = generator.GetReport(1, 5)
+  latex = generator.GetReport(4, 1)
   # Открываем файл для записи (если файл не существует, он будет создан)
   with open('file.txt', 'w', encoding='utf-8') as file:
     # Записываем строку в файл

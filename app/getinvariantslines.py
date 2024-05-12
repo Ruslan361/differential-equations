@@ -9,31 +9,31 @@ def SearchInvariantLines(P, Q):
     Y = k * x + c
     #P = self.P.subs({self.a: a, self.b: b})
     #Q = self.Q.subs({self.a: a, self.b: b})
-    
+
     #dy/dt - k * dx/dt
     exp = Q.subs({y: Y}) - k * P.subs({y: Y})
-    
+
     koeffs = systemofDE.GetKoeff(exp, x, k, c)
-    
+
     #yotx - инвариантные прямые
     yotx = []
     for coeff in koeffs:
         yotx.append((coeff[0] * x + coeff[1]))
-    
-    
-    
-    
+
+
+
+
     #x = ky + c
     #dx/dt - k * dy/dt
     X = k * y + c
     exp = P.subs({x: X}) - k * Q.subs({x: X})
-    
+
     koeffs = systemofDE.GetKoeff(exp, y, k, c)
-    
+
     #yotx - инвариантные прямые
     xoty = []
     for coeff in koeffs:
-        xoty.append((coeff[0] * x + coeff[1]))
+        xoty.append((coeff[0] * y + coeff[1]))
     #print(koeffs)
     return yotx, xoty
 
