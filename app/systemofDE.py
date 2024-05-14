@@ -67,7 +67,29 @@ def GetChar(state, J):
   #print()
   eigenvalues, eigenvectors = GetEigenVectorAndValues(JatState)
   return {"Состояние равновесия": state, "собственные числа": eigenvalues,"собственные вектора": eigenvectors, "тип состояния равновесия": GetTypeOfEq(eigenvalues)}
+#import symengine
+#Поиск коэффициэнтов методом неопределённых коэффициэнтов
+#Возвращает результат
 
+def GetKoeffAB(exp, variable, k, c, a, b) -> tuple:
+    #expr = expr.subs({variable, sympy.symbols('x')})
+    exp = sympy.Poly(exp, variable)
+    coeff = exp.coeffs()
+    eq = []
+    for co in coeff:
+        eq.append(((sympy.Eq(co, 0))))
+    #result = sympy.solve(eq, (k, c, a), dict=False)
+    result = sympy.nonlinsolve(eq, (k, c, a, b))
+    #res = sympy.solveset(eq, (k, c, a, b), domain=sympy.S.Reals)
+    #bs = []
+    #for res in result:
+    #    new_eq = []
+    #    for  e in eq:
+    #        new_eq.append(e.subs({k: res[0], c: res[1], a: res[2]}))
+    #    b = sympy.solve(new_eq, (b,), dict=False)
+    #    bs.append(b)
+    
+    return result
 #Поиск коэффициэнтов методом неопределённых коэффициэнтов
 def GetKoeff(exp, variable, k, c) -> tuple:
     #expr = expr.subs({variable, sympy.symbols('x')})
