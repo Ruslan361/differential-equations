@@ -15,6 +15,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from randcolor import RandColor
 
+#import multiprocessing
+#multiprocessing.set_start_method('spawn', True)
+from concurrent import futures
+
 def plot_yx(expr, x_range=(-10, 10), label=""):
     """
     Рисует график функции y = f(x) с использованием SymPy и Matplotlib.
@@ -28,7 +32,7 @@ def plot_yx(expr, x_range=(-10, 10), label=""):
     """
     x = sp.symbols('x')
     #f = sp.Function('f')(expr)
-    f = sp.lambdify(x, expr + 0 * x, modules='numpy')
+    f = sp.lambdify(x, expr + 0 * x, modules='sympy')
 
     x_vals = np.linspace(x_range[0], x_range[1], 800)
     y_vals = f(x_vals)
@@ -54,7 +58,7 @@ def plot_xy(expr, y_range=(-10, 10), label=""):
     ylabel (str, optional): Подпись оси y.
     """
     y = sp.symbols('y')
-    f = sp.lambdify(y, expr + 0*y, modules='numpy')
+    f = sp.lambdify(y, expr + 0*y, modules='sympy')
 
     y_vals = np.linspace(y_range[0], y_range[1], 800)
     x_vals = f(y_vals)
@@ -65,25 +69,86 @@ def plot_xy(expr, y_range=(-10, 10), label=""):
     #plt.figure(figsize=(10, 6))
     plt.plot(x_vals, y_vals, '--b', label=label)
 
+def new_method1(system, x, y, a, b, state, vector_len, vector_width, vec):
+
+    dx = float (vec[0].evalf())
+    dy = float (vec[1].evalf())
 
 
+    return [new_method(system, x, y, a, b, state, dx, dy) , new_method(system, x, y, a, b, state, -dx, -dy)]
 
 
-def DrawSystem(system, startx: float, starty:float, steps:int, sizeofstep: float, a = 1, b = 1):
+def new_method(system, x, y, a, b, state, dx, dy):
+    evector = np.array([[dx],[dy]])
+
+    xn = float(state[x].evalf()) + dx * 1e-3
+    yn = float(state[y].evalf()) + dy * 1e-3
+
+    dn = system.GetDirection(xn, yn, a, b)
+    dxn = float(dn['P'])
+    dyn = float(dn['Q'])
+    nearvector = np.array([[dxn],[dyn]])
+
+    llcosa = np.dot(evector.transpose(), nearvector)
+    if llcosa > 0:
+        return [GetDrawSystem(system, xn, yn, 1000000, 0.0005, mode='--r'), '--r']
+    else:
+        return [GetDrawSystem(system, xn, yn, 1000000, -0.0005, mode='--g'), '--g']
+    
+    #p = self.system.Plot(nulklines["P = 0"])
+    #p.extend(self.system.Plot(nulklines["Q = 0"]))
+def GetDrawSystem(system, startx: float, starty:float, steps:int, sizeofstep: float, a = 1, b = 1, mode='--k'):
     x, y = startx, starty
     xpoints = []
     ypoints = []
+    P = system.P.subs({system.a: a, system.b: b})
+    Q = system.Q.subs({system.a: a, system.b: b})
+    Pl = sp.lambdify((system.x, system.y), P, modules='sympy')
+    Ql = sp.lambdify((system.x, system.y), Q, modules='sympy')
+
     for i in range(steps):
-        d = system.GetDirection(x, y, a, b)
-        dx = float(d['P'])
-        dy = float(d['Q'])
-        xpoints.append(x)
-        ypoints.append(y)
+        dx = Pl(x, y)
+        dy = Ql(x, y)
+        #d = system.GetDirection(x, y, a, b)
+        #dx = float(d['P'])
+        #dy = float(d['Q'])
+        xpoints.append(float(x))
+        ypoints.append(float(y))
+        l = pow(dx**2 + dy**2, 0.5)
+        if not l == 0:
+            dx = dx/l
+            dy = dy / l
         x = dx * sizeofstep + x
         y = dy * sizeofstep + y
-    plt.plot(xpoints, ypoints, '--k')
+    return xpoints, ypoints
 
-def arrowbuild(x: float, y: float, dx: float, dy: float, vector_len:float, vector_width) -> None:
+
+def DrawSystem(system, startx: float, starty:float, steps:int, sizeofstep: float, a = 1, b = 1, mode='--k'):
+    x, y = startx, starty
+    xpoints = []
+    ypoints = []
+    P = system.P.subs({system.a: a, system.b: b}, modules='sympy')
+    Q = system.Q.subs({system.a: a, system.b: b}, modules='sympy')
+    Pl = sp.lambdify((system.x, system.y), P)
+    Ql = sp.lambdify((system.x, system.y), Q)
+
+    for i in range(steps):
+        dx = Pl(x, y)
+        dy = Ql(x, y)
+        #d = system.GetDirection(x, y, a, b)
+        #dx = float(d['P'])
+        #dy = float(d['Q'])
+        xpoints.append(x)
+        ypoints.append(y)
+        l = pow(dx**2 + dy**2, 0.5)
+        if not l == 0:
+            dx = dx / l
+            dy = dy / l
+        x = dx * sizeofstep + x
+        y = dy * sizeofstep + y
+    plt.plot(xpoints, ypoints, mode)
+
+def arrowbuild(x: float, y: float, dx: float, dy: float, vector_len:float, vector_width, color = 'blue') -> None:
     l = (dx**2 + dy**2)**(0.5)
     if not (l == 0):
         dx = dx/l
@@ -94,7 +159,7 @@ def arrowbuild(x: float, y: float, dx: float, dy: float, vector_len:float, vecto
     dx = dx * vector_len
     dy = dy * vector_len
     #arrowprops=arrowprops(arrowstyle='<-', color='blue', linewidth=10, mutation_scale=150)
-    plt.arrow(x=x, y=y, dx=dx, dy=dy, shape='full', width= vector_width)
+    plt.arrow(x=x, y=y, dx=dx, dy=dy, shape='full', width= vector_width, color=color)
 
 
 def build(graphics, left_border_x, right_border_x, left_border_y, right_border_y, count):
@@ -140,7 +205,7 @@ def build(graphics, left_border_x, right_border_x, left_border_y, right_border_y
     #graph = FCKA(figure=plt.gcf())
     #return graph
 
-
+import gc
 class Container(StackLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -155,8 +220,11 @@ class Container(StackLayout):
         self.graph.size_hint = (None, None)
         self.scroll.add_widget(self.graph)
     def GraphRefresh(self):
-
         self.scroll.remove_widget(self.graph)
+        self.graph.clear_widgets()
+        del self.graph
+
+        gc.collect()
         self.graph = FCKA(figure=plt.gcf())
         self.scroll.add_widget(self.graph)
         self.graph.mpl_connect("button_press_event", self.on_graph_click)
@@ -164,6 +232,7 @@ class Container(StackLayout):
         self.graph.size_hint = (None, None)
 
     def analiz(self):
+        plt.close()
         result = ""
 
         x = sp.symbols('x')
@@ -214,16 +283,18 @@ class Container(StackLayout):
             vectors = char["собственные вектора"]
             vector_len = float(self.vec_len.text)
             vector_width = float(self.vec_width.text)
-            for vec in vectors:
-                if sp.im(vec[0]) == 0 and sp.im(vec[1]) == 0:
-                    dx = float (vec[0].evalf())
-                    dy = float (vec[1].evalf())
-                    arrowbuild(float(state[x].evalf()), float(state[y].evalf()), dx, dy, vector_len, vector_width)
+
+            self.DrawAsync(x, y, a, b, state, vectors, vector_len, vector_width)
+
+            states_color = {'седло': 'red', 'касп': 'yellow', 'устойчивый узел': 'green', 'неустойчивый узел': 'green',  'неустойчивый фокус': 'yellow', 'устойчивый фокус': 'yellow'}
+            SOFEType = char["тип состояния равновесия"]
+            if SOFEType in states_color:
+                plt.scatter(float(state[x].evalf()), float(state[y].evalf()), color=states_color[SOFEType], marker='o', label=SOFEType, s=vector_width*1000)
 
 
         print(self.system.SearchInvariantLines(a, b))
 
-
+        plt.legend()
 
         yotx, xoty = self.system.SearchInvariantLines(a, b)
         for ys in yotx:
@@ -239,15 +310,34 @@ class Container(StackLayout):
           result += "x = " + str(line) + '\n'
 
         self.report.text = result
-        #p = self.system.Plot(nulklines["P = 0"])
-        #p.extend(self.system.Plot(nulklines["Q = 0"]))
+
+    def DrawAsync(self, x, y, a, b, state, vectors, vector_len, vector_width):
+        with futures.ProcessPoolExecutor(max_workers=12) as executor:
+            todo = []
+            for vec in vectors:
+                    #print(new_method1(self.system,x, y, a, b, state, vector_len, vector_width, vec))
+                if sp.im(vec[0]) == 0 and sp.im(vec[1]) == 0:
+                    future = executor.submit(new_method1, self.system, x, y, a, b, state, vector_len, vector_width, vec)
+                    todo.append(future)
+                    dx = float (vec[0].evalf())
+                    dy = float (vec[1].evalf())
+                    arrowbuild(float(state[x].evalf()), float(state[y].evalf()), dx, dy, vector_len, vector_width, 'red')
+                    #self.new_method1(x, y, a, b, state, vector_len, vector_width, vec)
+            for future in futures.as_completed(todo):
+                    #print()
+                r = future.result()
+                plt.plot(r[0][0][0], r[0][0][1], r[0][1])
+                plt.plot(r[1][0][0], r[1][0][1], r[1][1])
+                r.clear()
+
+
 
     def on_graph_click(self, event):
         # Обработка события нажатия на график
         if event.button == 3:
             x, y = event.xdata, event.ydata
             if not x == None and not y == None:
-                DrawSystem(self.system, x, y, 10000, 0.0005)
+                DrawSystem(self.system, x, y, 10000000, 0.00005)
                 self.GraphRefresh()
         if event.button == 1:
             x, y = event.xdata, event.ydata

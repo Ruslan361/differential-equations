@@ -74,7 +74,9 @@ def GetChar(state, J):
 def GetKoeffAB(exp, variable, k, c, a, b) -> tuple:
     #expr = expr.subs({variable, sympy.symbols('x')})
     exp = sympy.Poly(exp, variable)
+    print(exp)
     coeff = exp.coeffs()
+    print(coeff)
     eq = []
     for co in coeff:
         eq.append(((sympy.Eq(co, 0))))
