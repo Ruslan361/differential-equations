@@ -1,5 +1,5 @@
-from random import randint
 import systemofDE
+from random import randint
 from kivy.uix.stacklayout import StackLayout
 from sympy.parsing.sympy_parser import parse_expr
 from kivy.core import text
@@ -109,6 +109,9 @@ def GetDrawSystem(system, startx: float, starty:float, steps:int, sizeofstep: fl
     for i in range(steps):
         dx = Pl(x, y)
         dy = Ql(x, y)
+
+        #dx = system.Plambdify(x, y, a, b)
+        #dy = system.Qlambdify(x, y, a, b)
         #d = system.GetDirection(x, y, a, b)
         #dx = float(d['P'])
         #dy = float(d['Q'])
@@ -232,7 +235,7 @@ class Container(StackLayout):
         self.graph.size_hint = (None, None)
 
     def analiz(self):
-        plt.close()
+        #plt.close()
         result = ""
 
         x = sp.symbols('x')
@@ -302,6 +305,9 @@ class Container(StackLayout):
         for xs in xoty:
             plot_xy(xs, (left_border_y, right_border_y), str(xs))
         self.GraphRefresh()
+
+        
+
         lines  = self.system.SearchInvariantLines(a, b)
         result += " инвариантные прямые \n"
         for line  in lines[0]:
@@ -312,23 +318,35 @@ class Container(StackLayout):
         self.report.text = result
 
     def DrawAsync(self, x, y, a, b, state, vectors, vector_len, vector_width):
-        with futures.ProcessPoolExecutor(max_workers=12) as executor:
-            todo = []
+        debug = False
+        if debug:
             for vec in vectors:
                     #print(new_method1(self.system,x, y, a, b, state, vector_len, vector_width, vec))
                 if sp.im(vec[0]) == 0 and sp.im(vec[1]) == 0:
-                    future = executor.submit(new_method1, self.system, x, y, a, b, state, vector_len, vector_width, vec)
-                    todo.append(future)
+                    r = new_method1(self.system, x, y, a, b, state, vector_len, vector_width, vec)
                     dx = float (vec[0].evalf())
                     dy = float (vec[1].evalf())
                     arrowbuild(float(state[x].evalf()), float(state[y].evalf()), dx, dy, vector_len, vector_width, 'red')
-                    #self.new_method1(x, y, a, b, state, vector_len, vector_width, vec)
-            for future in futures.as_completed(todo):
-                    #print()
-                r = future.result()
-                plt.plot(r[0][0][0], r[0][0][1], r[0][1])
-                plt.plot(r[1][0][0], r[1][0][1], r[1][1])
-                r.clear()
+                    plt.plot(r[0][0][0], r[0][0][1], r[0][1])
+                    plt.plot(r[1][0][0], r[1][0][1], r[1][1])
+        else:
+            with futures.ProcessPoolExecutor(max_workers=12) as executor:
+                todo = []
+                for vec in vectors:
+                        #print(new_method1(self.system,x, y, a, b, state, vector_len, vector_width, vec))
+                    if sp.im(vec[0]) == 0 and sp.im(vec[1]) == 0:
+                        future = executor.submit(new_method1, self.system, x, y, a, b, state, vector_len, vector_width, vec)
+                        todo.append(future)
+                        dx = float (vec[0].evalf())
+                        dy = float (vec[1].evalf())
+                        arrowbuild(float(state[x].evalf()), float(state[y].evalf()), dx, dy, vector_len, vector_width, 'red')
+                        #self.new_method1(x, y, a, b, state, vector_len, vector_width, vec)
+                for future in futures.as_completed(todo):
+                        #print()
+                    r = future.result()
+                    plt.plot(r[0][0][0], r[0][0][1], r[0][1])
+                    plt.plot(r[1][0][0], r[1][0][1], r[1][1])
+                    r.clear()
 
 
 

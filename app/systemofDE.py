@@ -4,6 +4,7 @@ from sympy.plotting import plot
 #import matplotlib.pyplot as plt
 import threading
 from randcolor import RandColor
+import numpy
 
 def GetEigenVectorAndValues (Matrix) -> tuple:
   eigenvectors = list()
@@ -137,6 +138,8 @@ class SystemOfDifferentialEquationsOnPlane:
         self.Q = Q
         self.x, self.y, self.a, self.b = sympy.symbols('x y a b')
         self.a, self.b = sympy.symbols('a b', real=False)
+        #self.Plambdify = sympy.lambdify((self.x, self.y, self.a, self.b), P, modules='sympy')
+        #self.Qlambdify = sympy.lambdify((self.x, self.y, self.a, self.b), Q, modules='sympy')
     def GetStateOfEquilibrium(self) -> dict:
         eq1 = sympy.Eq(self.P, 0)
         #print(eq1)

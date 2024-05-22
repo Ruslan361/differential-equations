@@ -1,4 +1,26 @@
 \babel@toc {russian}{}\relax 
 \contentsline {section}{\numberline {1}Анализ состояний равновесия системы}{3}{}%
 \contentsline {subsection}{\numberline {1.1}Общая бифуркационная диаграмма для всех состояний равновесия}{5}{}%
+\contentsline {subsection}{\numberline {1.2}Поиск инвариантных прямых}{5}{}%
 \contentsline {section}{\numberline {2}Фазовые портреты системы}{6}{}%
+\contentsline {subsection}{\numberline {2.1}Область 1}{6}{}%
+\contentsline {subsection}{\numberline {2.2}Область 2}{8}{}%
+\contentsline {subsection}{\numberline {2.3}Область 3}{9}{}%
+\contentsline {subsection}{\numberline {2.4}Область 4}{12}{}%
+\contentsline {subsection}{\numberline {2.5}Область 5}{13}{}%
+\contentsline {subsection}{\numberline {2.6}Область 6}{15}{}%
+\contentsline {subsection}{\numberline {2.7}Область 7}{16}{}%
+\contentsline {subsection}{\numberline {2.8}Область 8}{19}{}%
+\contentsline {subsection}{\numberline {2.9}Область 9}{20}{}%
+\contentsline {subsection}{\numberline {2.10}Область 10}{22}{}%
+\contentsline {subsection}{\numberline {2.11}Область 11}{23}{}%
+\contentsline {subsection}{\numberline {2.12}Область 12}{24}{}%
+\contentsline {subsection}{\numberline {2.13}Область 13}{25}{}%
+\contentsline {subsection}{\numberline {2.14}Область 14}{26}{}%
+\contentsline {subsection}{\numberline {2.15}Область 15}{28}{}%
+\contentsline {subsection}{\numberline {2.16}Область 16}{29}{}%
+\contentsline {subsection}{\numberline {2.17}Область 17}{30}{}%
+\contentsline {subsection}{\numberline {2.18}Область 18}{31}{}%
+\contentsline {subsection}{\numberline {2.19}Область 19}{32}{}%
+\contentsline {subsection}{\numberline {2.20}Область 20}{34}{}%
+\contentsline {subsection}{\numberline {2.21}Область 21}{35}{}%
